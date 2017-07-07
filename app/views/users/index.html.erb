@@ -1,0 +1,33 @@
+<div class="panel panel-default">
+  <div class="panel-heading">Total Users</div>
+  <div class="panel-body">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Add</th>
+          <th>Message</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @users.each do |user| %>
+        <tr>
+          <% unless current_user == user %>
+          <td><%= user.username %></td>
+          <td><%= user.email %></td>
+          <td>
+          <% if !current_user.friends.include?(user) %>
+            <%= link_to "Add Friend", friendships_path(:friend_id => user), :method => :post %>
+            <% else %>
+            Your friend!
+            <% end %>
+            <td><%= link_to 'message me!', conversations_path(:sender_id => current_user.id, :recipient_id => user.id), method: :post %></td>
+            <% end %>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -5,15 +5,21 @@
       <tr>
         <th>Name</th>
         <th>Email</th>
-        <th></th>
-        <th></th>
-        <th></th>
+        <th>Unread</th>
+        <th>Conversation</th>
+        <th>Set</th>
       </tr>
     </thead>
     <tbody>
+      <% @friends.each do |friend| %>
       <tr>
-        <td></td>
+        <td><%=friend.username  %></td>
+        <td><%=friend.email  %></td>
+        <td><%=friend.unread(current_user,friend)  %></td>
+        <td><%= link_to 'Conversation', conversations_path(:sender_id=>current_user.id, :recipient_id=>friend.id), method: :post, class: 'btn btn-primary' %></td>
+        <td><%= link_to 'Delete', friendship_path(friend),method: :delete, class: 'btn btn-danger', data:{confirm: 'Delete this friend?'} %></td>
       </tr>
+      <% end %>
     </tbody>
   </table>
 </div>

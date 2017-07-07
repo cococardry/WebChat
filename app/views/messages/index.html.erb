@@ -1,0 +1,48 @@
+<% if @over_ten %>
+<%= link_to 'Show Previous', '?m=all' %>
+<% end %>
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <span class="glyphicon glyphicon-comment"></span> Chat
+      </div>
+      <div class="panel-body" id="chat-body">
+        <ul class="chat">
+          <% @messages.each do |message| %>
+          <% if message.body %>
+          <li class="<%= message.user_id == current_user.id ? "right" : "left" %> clearfix">
+            <span class="chat-img <%= message.user_id == current_user.id ? "pull-right" : "pull-left"%> ">
+              <img src="https://ww3.sinaimg.cn/large/006tKfTcgy1fhbpidyy3pj30qo0qoacd.jpg" style="width:50px;" alt="User Avatar" class="img-circle" />
+            </span>
+            <div class="chat-body clearfix">
+              <div class="header">
+                <% user = User.find(message.user_id) %>
+                <strong class="primary-font"><%= user.username %> </strong>
+              </div>
+              <p>
+                <%= message.body %>
+                <% unless current_user != user %>
+                <%= link_to 'delete', conversation_message_path(@conversation, message), method: :delete, data: { confirm: "Are you sure?" } %>
+                <% end %>
+              </p>
+            </div>
+          </li>
+          <% end %>
+          <% end %>
+        </ul>
+      </div>
+      <div class="panel-footer">
+        <%= form_for [@conversation, @message] do |f| %>
+        <div class="input-group">
+          <%= f.text_area :body, class: "form-control input-sm", placeholder: "Type your message here..." %>
+          <%= f.text_field :user_id, value: current_user.id, type: "hidden"  %>
+          <span class="input-group-btn">
+            <%= f.submit "Send", class: "btn btn-warning btn-sm", id: "btn-chat" %>
+          </span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
