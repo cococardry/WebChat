@@ -8,10 +8,14 @@ class ConversationsController < ApplicationController
 
   def create
 
-    if Conversation.between(params[:sender_id],params[:recipient_id])
-      .present?
-      @conversation = Conversation.between(params[:sender_id],
-                                           params[:recipient_id]).first
+    if Conversation.between(params[:sender_id],params[:recipient_id]).present?
+      @conversation = Conversation.between(params[:sender_id],params[:recipient_id]).first
+      @friendship = current_user.friendships.build(:friend_id => params[:recipient_id])
+      @friendship.save
+
+      @friend = User.find(params[:recipient_id])
+      @friendship = @friend.friendships.build(:friend_id => current_user.id)
+      @friendship.save
     else
       @conversation = Conversation.create!(conversation_params)
 
